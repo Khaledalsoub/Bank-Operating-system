@@ -1,0 +1,132 @@
+#include <iostream>
+using namespace std;
+
+class Banksystem {
+private:
+    int PIN;
+    float deposit;
+    float withdraw;
+    static float savings;
+
+public:
+    Banksystem(int p) : PIN(p), deposit(0), withdraw(0) {}
+
+    void setPIN(int newPIN) {
+        if (newPIN >= 1000 && newPIN <= 9999) {
+            PIN = newPIN;
+            cout << "PIN updated successfully." << endl;
+        } else {
+            cout << "Invalid PIN. Please enter a 4-digit PIN." << endl;
+        }
+    }
+
+    bool checkPIN(int enteredPIN) const {
+        return enteredPIN == PIN;
+    }
+
+    void makeDeposit(float amount) {
+        if (amount > 0) {
+            deposit = amount;
+            savings += amount;
+            cout << "Deposit successful. New savings balance: " << savings << endl;
+        } else {
+            cout << "Invalid deposit amount." << endl;
+        }
+    }
+
+    void makeWithdraw(float amount) {
+        if (amount > 0 && amount <= savings) {
+            withdraw = amount;
+            savings -= amount;
+            cout << "Withdrawal successful. New savings balance: " << savings << endl;
+        } else {
+            cout << "Insufficient funds or invalid withdrawal amount." << endl;
+        }
+    }
+
+    void displayBalance() const {
+        cout << "Current savings balance: " << savings << endl;
+    }
+
+    float getLastDeposit() const {
+        return deposit;
+    }
+
+    float getLastWithdraw() const {
+        return withdraw;
+    }
+};
+
+float Banksystem::savings = 0;
+
+int main() {
+    Banksystem account(1234);
+
+    int enteredPIN;
+    cout << "Enter your PIN: ";
+    cin >> enteredPIN;
+
+    if (!account.checkPIN(enteredPIN)) {
+        cout << "Incorrect PIN!" << endl;
+        return 1;
+    }
+
+    int choice;
+    float amount;
+
+    do {
+        cout << "\n--- Banking System Menu ---\n";
+        cout << "1. Deposit Money\n";
+        cout << "2. Withdraw Money\n";
+        cout << "3. Check Balance\n";
+        cout << "4. Change PIN\n";
+        cout << "5. View Last Deposit\n";
+        cout << "6. View Last Withdrawal\n";
+        cout << "7. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+            cout << "Enter amount to deposit: ";
+            cin >> amount;
+            account.makeDeposit(amount);
+            break;
+
+        case 2:
+            cout << "Enter amount to withdraw: ";
+            cin >> amount;
+            account.makeWithdraw(amount);
+            break;
+
+        case 3:
+            account.displayBalance();
+            break;
+
+        case 4:
+            int newPIN;
+            cout << "Enter new 4-digit PIN: ";
+            cin >> newPIN;
+            account.setPIN(newPIN);
+            break;
+
+        case 5:
+            cout << "Last deposit amount: " << account.getLastDeposit() << endl;
+            break;
+
+        case 6:
+            cout << "Last withdrawal amount: " << account.getLastWithdraw() << endl;
+            break;
+
+        case 7:
+            cout << "Thank you for using our banking system. Goodbye!" << endl;
+            break;
+
+        default:
+            cout << "Invalid choice. Please try again." << endl;
+        }
+
+    } while (choice != 7);
+
+    return 0;
+}
